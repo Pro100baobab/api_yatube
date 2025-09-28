@@ -9,11 +9,16 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id', 'text', 'author', 'image', 'group', 'pub_date')
 
+    def validate_text(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError('Текст не может быть пустым.')
+        return value
+
 
 class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
-        fields = ('id', 'title', 'slug', 'description')
+        fields = '__all__'
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -23,3 +28,8 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ('id', 'author', 'post', 'text', 'created')
         read_only_fields = ('post',)
+
+    def validate_text(self, value):
+        if not value or not value.strip():
+            raise serializers.ValidationError('Текст не может быть пустым.')
+        return value
